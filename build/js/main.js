@@ -1,8 +1,5 @@
-"use strict";
-const inputEl = document.querySelector("input");
-const addBtn = document.querySelector("#add");
-const clearBtn = document.querySelector("#clear");
-const listContainer = document.querySelector("#list-container");
+import { TodoListItem } from "./class/TodoListItem.js";
+import { inputEl, addBtn, clearBtn, listContainer, } from "./domUtils/domUtils.js";
 function loadTodoList() {
     const storedTodoList = localStorage.getItem("todoList");
     if (storedTodoList) {
@@ -25,13 +22,15 @@ function saveTodoList() {
 }
 addBtn.addEventListener("click", () => {
     const inputVal = inputEl.value;
-    if (inputVal.trim() !== "") {
-        const listItem = document.createElement("li");
-        listItem.textContent = inputVal;
+    const randomNum = Math.floor(Math.random() * 100);
+    const listItem = new TodoListItem(randomNum, inputVal);
+    if (listItem.item.trim() !== "") {
+        const li = document.createElement("li");
+        li.textContent = listItem.item;
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "X";
-        listItem.appendChild(deleteBtn);
-        listContainer.appendChild(listItem);
+        li.appendChild(deleteBtn);
+        listContainer.appendChild(li);
         inputEl.value = "";
         saveTodoList();
     }
@@ -43,9 +42,9 @@ clearBtn.addEventListener("click", () => {
 listContainer.addEventListener("click", (event) => {
     const target = event.target;
     if (target.tagName.toLowerCase() === "button") {
-        const listItem = target.parentElement;
-        if (listItem !== null) {
-            listContainer.removeChild(listItem);
+        const li = target.parentElement;
+        if (li !== null) {
+            listContainer.removeChild(li);
             saveTodoList();
         }
     }
